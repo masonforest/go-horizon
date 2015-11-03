@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/PuerkitoBio/throttled"
+	"gopkg.in/throttled/throttled.v2"
 	"github.com/stellar/horizon/render/problem"
 	"github.com/stellar/horizon/test"
 )

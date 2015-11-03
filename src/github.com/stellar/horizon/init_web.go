@@ -3,9 +3,11 @@ package horizon
 import (
 	"net/http"
 	"strings"
+	"log"
 
-	"github.com/PuerkitoBio/throttled"
-	"github.com/PuerkitoBio/throttled/store"
+	"gopkg.in/throttled/throttled.v2"
+	"gopkg.in/throttled/throttled.v2/store/redigostore"
+	"gopkg.in/throttled/throttled.v2/store/memstore"
 	"github.com/rcrowley/go-metrics"
 	"github.com/rs/cors"
 	"github.com/sebest/xff"
@@ -122,10 +124,16 @@ func initWebActions(app *App) {
 }
 
 func initWebRateLimiter(app *App) {
-	rateLimitStore := store.NewMemStore(1000)
+	var rateLimitStore throttled.GCRAStore
+	var err error
+
+	rateLimitStore, err = memstore.New(1000)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if app.redis != nil {
-		rateLimitStore = store.NewRedisStore(app.redis, "throttle:", 0)
+		rateLimitStore, _ = redigostore.New(app.redis, "throttle:", 0)
 	}
 
 	rateLimiter := throttled.RateLimit(

@@ -5,7 +5,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/PuerkitoBio/throttled"
+	"gopkg.in/throttled/throttled.v2"
 	"github.com/Sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

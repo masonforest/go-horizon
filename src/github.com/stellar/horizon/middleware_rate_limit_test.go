@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/PuerkitoBio/throttled"
+	"gopkg.in/throttled/throttled.v2"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/stellar/horizon/test"
 )
@@ -40,7 +40,7 @@ func TestRateLimitMiddleware(t *testing.T) {
 
 		Convey("sets X-RateLimit-Reset header correctly", func() {
 			w := rh.Get("/", test.RequestHelperNoop)
-			So(w.Header().Get("X-RateLimit-Reset"), ShouldEqual, "3599")
+			So(w.Header().Get("X-RateLimit-Reset"), ShouldEqual, "360")
 		})
 
 		Convey("Restricts based on RemoteAddr IP after too many requests", func() {
