@@ -159,7 +159,7 @@ func run(cmd *cobra.Command, args []string) {
 		StellarCoreUrl:         viper.GetString("stellar-core-url"),
 		Autopump:               viper.GetBool("autopump"),
 		Port:                   viper.GetInt("port"),
-		RateLimit:              throttled.PerHour(viper.GetInt("per-hour-rate-limit")),
+		RateLimit:              throttled.RateQuota{throttled.PerHour(viper.GetInt("per-hour-rate-limit")), viper.GetInt("per-hour-rate-limit")},
 		RedisUrl:               viper.GetString("redis-url"),
 		RubyHorizonUrl:         viper.GetString("ruby-horizon-url"),
 		LogLevel:               ll,

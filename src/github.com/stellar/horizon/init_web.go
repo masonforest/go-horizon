@@ -22,7 +22,7 @@ import (
 // rate limiter, etc.
 type Web struct {
 	router      *web.Mux
-	rateLimiter *throttled.Throttler
+	rateLimiter throttled.HTTPRateLimiter
 
 	requestTimer metrics.Timer
 	failureMeter metrics.Meter
@@ -133,17 +133,26 @@ func initWebRateLimiter(app *App) {
 	}
 
 	if app.redis != nil {
-		rateLimitStore, _ = redigostore.New(app.redis, "throttle:", 0)
+		rateLimitStore, err = redigostore.New(app.redis, "throttle:", 0)
+
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
-	rateLimiter := throttled.RateLimit(
-		app.config.RateLimit,
-		&throttled.VaryBy{Custom: remoteAddrIP},
-		rateLimitStore,
-	)
+	RateLimiter, err := throttled.NewGCRARateLimiter(rateLimitStore, app.config.RateLimit)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	rateLimiter.DeniedHandler = &RateLimitExceededAction{App: app, Action: Action{}}
-	app.web.rateLimiter = rateLimiter
+	httpRateLimiter := throttled.HTTPRateLimiter{
+			RateLimiter: RateLimiter,
+			VaryBy:      &throttled.VaryBy{Custom: remoteAddrIP},
+	}
+	
+
+	httpRateLimiter.DeniedHandler = &RateLimitExceededAction{App: app, Action: Action{}}
+	app.web.rateLimiter = httpRateLimiter
 }
 
 func remoteAddrIP(r *http.Request) string {

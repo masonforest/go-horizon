@@ -14,7 +14,7 @@ type Config struct {
 	RubyHorizonUrl         string
 	Port                   int
 	Autopump               bool
-	RateLimit              throttled.Quota
+	RateLimit              throttled.RateQuota
 	RedisUrl               string
 	LogLevel               logrus.Level
 	SentryDSN              string
