@@ -90,7 +90,7 @@ func init() {
 	rootCmd.Flags().Int(
 		"max-burst-rate-limit",
 		5,
-		"max count of reuqest allowed in a single burst, by remote ip address",
+		"max count of requests allowed in a single burst, by remote ip address",
 	)
 
 	rootCmd.Flags().String(
