@@ -129,20 +129,20 @@ func initWebRateLimiter(app *App) {
 
 	rateLimitStore, err = memstore.New(1000)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	if app.redis != nil {
 		rateLimitStore, err = redigostore.New(app.redis, "throttle:", 0)
 
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 	}
 
 	RateLimiter, err := throttled.NewGCRARateLimiter(rateLimitStore, app.config.RateLimit)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	httpRateLimiter := throttled.HTTPRateLimiter{
