@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"gopkg.in/throttled/throttled.v2"
+	throttled "gopkg.in/throttled/throttled.v2"
 	"github.com/stellar/horizon/render/problem"
 	"github.com/stellar/horizon/test"
 )
@@ -25,7 +25,7 @@ func NewTestConfig() Config {
 	return Config{
 		DatabaseUrl:            test.DatabaseUrl(),
 		StellarCoreDatabaseUrl: test.StellarCoreDatabaseUrl(),
-		RateLimit:              throttled.RateQuota{throttled.PerHour(1000), 1000},
+		RateLimit:              throttled.RateQuota{MaxRate: throttled.PerHour(1000), MaxBurst: 1000},
 	}
 }
 

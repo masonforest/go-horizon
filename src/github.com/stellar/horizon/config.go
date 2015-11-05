@@ -1,7 +1,7 @@
 package horizon
 
 import (
-	"gopkg.in/throttled/throttled.v2"
+	throttled "gopkg.in/throttled/throttled.v2"
 	"github.com/Sirupsen/logrus"
 )
 

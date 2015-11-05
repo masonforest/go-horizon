@@ -5,7 +5,7 @@ import (
 	"strings"
 	"log"
 
-	"gopkg.in/throttled/throttled.v2"
+	throttled "gopkg.in/throttled/throttled.v2"
 	"gopkg.in/throttled/throttled.v2/store/redigostore"
 	"gopkg.in/throttled/throttled.v2/store/memstore"
 	"github.com/rcrowley/go-metrics"

@@ -5,7 +5,7 @@ import (
 	"os"
 	"runtime"
 
-	"gopkg.in/throttled/throttled.v2"
+	throttled "gopkg.in/throttled/throttled.v2"
 	"github.com/Sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -36,6 +36,7 @@ func init() {
 	viper.BindEnv("stellar-core-url", "STELLAR_CORE_URL")
 	viper.BindEnv("friendbot-secret", "FRIENDBOT_SECRET")
 	viper.BindEnv("per-hour-rate-limit", "PER_HOUR_RATE_LIMIT")
+	viper.BindEnv("max-burst-rate-limit", "MAX_BURST_RATE_LIMIT")
 	viper.BindEnv("redis-url", "REDIS_URL")
 	viper.BindEnv("ruby-horizon-url", "RUBY_HORIZON_URL")
 	viper.BindEnv("log-level", "LOG_LEVEL")
@@ -84,6 +85,12 @@ func init() {
 		"per-hour-rate-limit",
 		3600,
 		"max count of requests allowed in a one hour period, by remote ip address",
+	)
+
+	rootCmd.Flags().Int(
+		"max-burst-rate-limit",
+		5,
+		"max count of reuqest allowed in a single burst, by remote ip address",
 	)
 
 	rootCmd.Flags().String(
@@ -159,7 +166,7 @@ func run(cmd *cobra.Command, args []string) {
 		StellarCoreUrl:         viper.GetString("stellar-core-url"),
 		Autopump:               viper.GetBool("autopump"),
 		Port:                   viper.GetInt("port"),
-		RateLimit:              throttled.RateQuota{throttled.PerHour(viper.GetInt("per-hour-rate-limit")), viper.GetInt("per-hour-rate-limit")},
+		RateLimit:              throttled.RateQuota{MaxRate: throttled.PerHour(viper.GetInt("per-hour-rate-limit")), MaxBurst: viper.GetInt("max-burst-rate-limit")},
 		RedisUrl:               viper.GetString("redis-url"),
 		RubyHorizonUrl:         viper.GetString("ruby-horizon-url"),
 		LogLevel:               ll,

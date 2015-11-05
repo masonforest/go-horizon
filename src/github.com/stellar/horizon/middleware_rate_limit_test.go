@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"testing"
 
-	"gopkg.in/throttled/throttled.v2"
+	throttled "gopkg.in/throttled/throttled.v2"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/stellar/horizon/test"
 )
@@ -13,7 +13,7 @@ func TestRateLimitMiddleware(t *testing.T) {
 
 	Convey("Rate Limiting", t, func() {
 		c := NewTestConfig()
-		c.RateLimit = throttled.RateQuota{throttled.PerHour(10), 9}
+		c.RateLimit = throttled.RateQuota{MaxRate: throttled.PerHour(10), MaxBurst: 9}
 		app, _ := NewApp(c)
 		defer app.Close()
 		rh := NewRequestHelper(app)
@@ -86,7 +86,7 @@ func TestRateLimitMiddleware(t *testing.T) {
 
 	Convey("Rate Limiting works with redis", t, func() {
 		c := NewTestConfig()
-		c.RateLimit = throttled.RateQuota{throttled.PerHour(10), 9}
+		c.RateLimit = throttled.RateQuota{MaxRate: throttled.PerHour(10), MaxBurst: 9}
 		c.RedisUrl = "redis://127.0.0.1:6379/"
 		app, _ := NewApp(c)
 		defer app.Close()
