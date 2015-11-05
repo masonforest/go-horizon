@@ -4,7 +4,9 @@ title: Rate Limiting
 
 In order to provide service stability, Horizon limits the number of requests a
 client can perform within a one hour window.  By default this is set to 3600
-requests per hour—an average of one request per second.
+requests per hour—an average of one request per second. Horizon also limits the
+number of requests a client can perform in a single burst. By default this is
+set to 5 requests per burst.
 
 ## Response headers for rate limiting
 
